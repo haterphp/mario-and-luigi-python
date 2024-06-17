@@ -2,6 +2,7 @@ from pygame import Rect, draw, K_LEFT, K_RIGHT
 
 from typing import Optional, Tuple
 
+from events.collision.collision_event_subscriber import TCollisionEventSubscriber
 from scene import Scene
 from .entity import Entity
 from variables import PLAYER_COORDINATE, PLAYER_SPEED, PLAYER_SPEED_VERTICAL, GRAVITY, SCENE_SIZE
@@ -10,8 +11,7 @@ from variables import PLAYER_COORDINATE, PLAYER_SPEED, PLAYER_SPEED_VERTICAL, GR
 class Player(Entity):
     def __init__(self, scene: Scene):
         PLAYER_COORDINATE.y = scene.screen.get_height() - PLAYER_COORDINATE.h
-        super().__init__(PLAYER_COORDINATE)
-        self.__scene = scene
+        super().__init__(scene,  PLAYER_COORDINATE)
 
         # Visual player attributes
         self.__rect: Optional[Rect] = None
@@ -22,23 +22,23 @@ class Player(Entity):
 
     def draw(self):
         if self.__rect is not None:
-            draw.rect(self.__scene.screen, (255, 0, 0), self.__rect)
+            draw.rect(self._scene.screen, (255, 0, 0), self.__rect)
 
     def onKeyPress(self, key: Tuple[bool]):
-        HALF_SCENE = self.__scene.screen.get_width() / 2 + PLAYER_SPEED
+        HALF_SCENE = self._scene.screen.get_width() / 2 + PLAYER_SPEED
 
         if key[K_LEFT]:
             speed = -PLAYER_SPEED
-            if self.__scene.offset > 0 and self._coordinate.right < HALF_SCENE:
-                self.__scene.move(speed)
+            if self._scene.offset > 0 and self._coordinate.right < HALF_SCENE:
+                self._scene.move(speed)
             elif self._coordinate.left > 0:
                 self._coordinate.moveX(speed)
 
         elif key[K_RIGHT]:
             speed = PLAYER_SPEED
-            if self.__scene.offset < SCENE_SIZE and self._coordinate.right >= HALF_SCENE:
-                self.__scene.move(speed)
-            elif self._coordinate.right < self.__scene.screen.get_width():
+            if self._scene.offset < SCENE_SIZE and self._coordinate.right >= HALF_SCENE:
+                self._scene.move(speed)
+            elif self._coordinate.right < self._scene.screen.get_width():
                 self._coordinate.moveX(speed)
 
         self.__syncRect()

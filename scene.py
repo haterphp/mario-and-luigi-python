@@ -15,5 +15,5 @@ class Scene(Drawable):
 
     def draw(self):
         self.screen.fill(SCREEN_BACKGROUND)
-        print('screen offset', self.offset)
+        # print('screen offset', self.offset)
 
