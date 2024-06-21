@@ -1,37 +1,18 @@
-from pygame import Surface
+from pygame.display import set_mode
 
-from common.coordinate import Coordinate
 from common.drawable import Drawable
-from map import Map
-from variables import SCREEN_BACKGROUND
+from variables import SCREEN_BACKGROUND, SCREEN_WIDTH, SCREEN_HEIGHT
 
-BLOCK_COORDINATES = [
-    Coordinate(
-        x=150,
-        y=0,
-        h=50,
-        w=50
-    ),
-    Coordinate(
-        x=250,
-        y=0,
-        h=50,
-        w=50
-    ),
-]
 
 class Scene(Drawable):
-    def __init__(self, screen: Surface):
+    def __init__(self):
         self.offset = 0
-        self.screen = screen
-
-        self.__map = Map(self)
+        self.screen = set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     def move(self, offset: int):
         self.offset += offset
 
     def draw(self):
         self.screen.fill(SCREEN_BACKGROUND)
-        self.__map.draw()
 
 

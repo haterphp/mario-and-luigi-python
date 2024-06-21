@@ -1,16 +1,17 @@
 import pygame
 
 from game import Game
-from variables import SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_FPS
+from scene import Scene
+from variables import SCREEN_FPS
 
 pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
 
 def main():
     is_run = True
     clock = pygame.time.Clock()
-    game_controller = Game(screen)
+
+    scene = Scene()
+    game_controller = Game(scene)
 
     while is_run:
         clock.tick(SCREEN_FPS)

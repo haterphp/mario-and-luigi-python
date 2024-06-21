@@ -1,9 +1,8 @@
-from pygame import Rect, draw, K_LEFT, K_RIGHT
+from pygame import K_LEFT, K_RIGHT
 
-from typing import Optional, Tuple
+from typing import Tuple, List
 
-from events import CollisionEventHandler
-from events.collision.collision_event_subscriber import TCollisionEventSubscriber
+from events import CollisionEventHandler, CollisionEventSubscriber
 from scene import Scene
 from .entity import Entity
 from variables import PLAYER_COORDINATE, PLAYER_SPEED, PLAYER_SPEED_VERTICAL, GRAVITY, SCENE_SIZE
@@ -14,20 +13,16 @@ class Player(Entity):
         PLAYER_COORDINATE.y = scene.screen.get_height() - PLAYER_COORDINATE.h
         super().__init__(scene,  PLAYER_COORDINATE)
 
+        self._color = (255, 0, 0)
+
         # Collision
         self.__collision_event = CollisionEventHandler(self)
-
-        # Visual player attributes
-        self.__rect: Optional[Rect] = None
-        self.__syncRect()
 
         # Jump attributes
         self.__jumpCount = 0
 
     def draw(self):
-        if self.__rect is not None:
-            draw.rect(self._scene.screen, (255, 0, 0), self.__rect)
-
+        super().draw()
         self.__collision_event.observe()
 
     def onKeyPress(self, key: Tuple[bool]):
@@ -47,18 +42,11 @@ class Player(Entity):
             elif self._coordinate.right < self._scene.screen.get_width():
                 self._coordinate.moveX(speed)
 
-        self.__syncRect()
+    def subscribeEntitiesForCollision(self, subscribers: List[CollisionEventSubscriber]):
+        for subscriber in subscribers:
+            self.__collision_event.subscribe(subscriber)
 
     def __jump(self):
         self.__jumpCount += 1
         self._coordinate.moveY(PLAYER_SPEED_VERTICAL - GRAVITY * self.__jumpCount)
-
-
-    def __syncRect(self):
-        self.__rect = Rect(
-            self._coordinate.x,
-            self._coordinate.y,
-            self._coordinate.w,
-            self._coordinate.h
-        )
 
