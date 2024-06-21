@@ -2,6 +2,7 @@ from pygame import Rect, draw, K_LEFT, K_RIGHT
 
 from typing import Optional, Tuple
 
+from events import CollisionEventHandler
 from events.collision.collision_event_subscriber import TCollisionEventSubscriber
 from scene import Scene
 from .entity import Entity
@@ -13,6 +14,9 @@ class Player(Entity):
         PLAYER_COORDINATE.y = scene.screen.get_height() - PLAYER_COORDINATE.h
         super().__init__(scene,  PLAYER_COORDINATE)
 
+        # Collision
+        self.__collision_event = CollisionEventHandler(self)
+
         # Visual player attributes
         self.__rect: Optional[Rect] = None
         self.__syncRect()
@@ -23,6 +27,8 @@ class Player(Entity):
     def draw(self):
         if self.__rect is not None:
             draw.rect(self._scene.screen, (255, 0, 0), self.__rect)
+
+        self.__collision_event.observe()
 
     def onKeyPress(self, key: Tuple[bool]):
         HALF_SCENE = self._scene.screen.get_width() / 2 + PLAYER_SPEED

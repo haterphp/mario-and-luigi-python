@@ -9,6 +9,9 @@ class CollisionEventSubscriber:
     def getCoordinate(self) -> Coordinate:
         pass
 
+    def onCollision(self, entity: TCollisionEventSubscriber):
+        pass
+
     def onCollisionStarted(self, entity: TCollisionEventSubscriber):
         pass
 

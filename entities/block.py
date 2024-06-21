@@ -6,15 +6,8 @@ from .entity import Entity
 
 
 class Block(Entity):
-    def __init__(self, scene: Scene):
-        BLOCK_COORDINATES = Coordinate(
-            x=150,
-            y=scene.screen.get_height() - 100,
-            h=50,
-            w=50
-        )
-
-        super().__init__(scene, BLOCK_COORDINATES)
+    def __init__(self, scene: Scene, coordinate: Coordinate):
+        super().__init__(scene, coordinate)
 
         self._rect = Rect(
             self._coordinate.x,
